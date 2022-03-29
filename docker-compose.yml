@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+  app:
+    container_name: starting-seed-react
+    image: starting-seed-react:latest
+    restart: always
+    environment:
+      - PORT= 80
+      - REACT_APP_API_URL= http://<api-url>:<port>/v1
+    build:
+      context: .
+    ports:
+      - '8080:80'
+
+    logging:
+      options:
+        max-size: 10m
+        max-file: '3'

@@ -1,0 +1,87 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/strict",
+    "airbnb"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["react", "react-hooks", "jsx-a11y"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "ignorePatterns": ["*.test.js", "*.test.tsx", "*.css", "*.svg", "*.scss"],
+  "rules": {
+    "max-len": ["error", { "code": 130 }],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-no-bind": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "no-unused-vars": "warn",
+    "no-case-declarations": "off",
+    "linebreak-style": 0,
+    "comma-dangle": ["error", {
+      "arrays": "only-multiline",
+      "objects": "only-multiline",
+      "imports": "only-multiline",
+      "exports": "only-multiline",
+      "functions": "only-multiline"
+    }],
+    "object-curly-spacing": ["warn", "always"],
+    "object-curly-newline": ["warn",
+      {
+        "ObjectExpression": { "consistent": true, "multiline": true, "minProperties": 1 },
+        "ObjectPattern": { "consistent": true, "multiline": true },
+        "ImportDeclaration": { "multiline": true, "minProperties": 10 },
+        "ExportDeclaration": { "multiline": true, "minProperties": 10 }
+      }],
+    "jsx-a11y/label-has-associated-control": ["error", {
+      "required": {
+        "some": ["nesting", "id"]
+      }
+    }],
+    "jsx-a11y/label-has-for": ["error", {
+      "required": {
+        "some": ["nesting", "id"]
+      }
+    }],
+    "quotes": ["error", "single", { "avoidEscape": true, "allowTemplateLiterals": true }],
+
+    // Comments
+    "no-inline-comments": "error",
+    "line-comment-position": ["error", { "position": "above" }],
+    "lines-around-comment": [
+      "error",
+      {
+        "beforeBlockComment": true,
+        "beforeLineComment": false,
+        "allowBlockStart": true,
+        "allowClassStart": true,
+        "allowObjectStart": true,
+        "allowArrayStart": true
+      }
+    ],
+    "multiline-comment-style": ["error", "bare-block"],
+    "spaced-comment": ["error", "always", { "block": { "balanced": true } }],
+
+    // State
+    "no-param-reassign": ["warn", { "props": true, "ignorePropertyModificationsFor": ["state"] }]
+  }
+}

@@ -1,5 +1,6 @@
 {
   "name": "starting-seed-react",
+  "proxy": "http://127.0.0.1:8051",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -20,6 +21,7 @@
     "node-sass": "^7.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-google-login": "^5.2.2",
     "react-hook-form": "^7.22.5",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.1",

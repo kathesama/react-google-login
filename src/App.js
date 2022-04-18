@@ -1,20 +1,131 @@
-import logo from './logo.svg';
+import GoogleLogin from 'react-google-login';
+import { useState } from 'react';
+
+// import { getGoogleApiRoute } from './utils/routes';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [loginData, setLoginData] = useState(
+    localStorage.getItem('user-data') ? JSON.parse(localStorage.getItem('user-data')) : {}
+  );
+  const [tokenData, setTokenData] = useState(
+    localStorage.getItem('access-token') ? JSON.parse(localStorage.getItem('access-token')) : {}
+  );
+  const [refreshData, setRefreshData] = useState(
+    localStorage.getItem('refresh-token') ? JSON.parse(localStorage.getItem('refresh-token')) : {}
+  );
+
+  const handleFailure = (response) => {
+    console.log('failure: ', response);
+  };
+
+  const handleLogout = async () => {
+    const data = await fetch('http://localhost:8051/api/v1/auths/logout', {
+      method: 'POST',
+      xsrfCookieName: 'csrftoken',
+      xsrfHeaderName: 'X-CSRFToken',
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept-Language': 'es',
+        'X-Requested-With': 'XMLHttpRequest',
+        authorization: !process.env.IS_COOKIE_HTTPONLY_BASED ? `Bearer ${refreshData?.token}` : undefined,
+      },
+      body: JSON.stringify({
+        deletePreviousTokens: false,
+        option: 'logout',
+      }),
+    })
+      .then((res) => res.json())
+      .catch((err) => err);
+
+    if (data?.statusCode === undefined) {
+      localStorage.removeItem('user-data');
+      localStorage.removeItem('access-token');
+      localStorage.removeItem('refresh-token');
+      setLoginData({});
+    }
+  };
+
+  const handleLogin = async (googleData) => {
+    const data = await fetch('http://localhost:8051/api/v1/users/google-login/', {
+      method: 'POST',
+      xsrfCookieName: 'csrftoken',
+      xsrfHeaderName: 'X-CSRFToken',
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept-Language': 'es',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+      body: JSON.stringify({
+        ...googleData.profileObj,
+        token: googleData.tokenId,
+      }),
+    })
+      .then((res) => res.json())
+      .catch((err) => err);
+
+    if (data?.statusCode === undefined) {
+      setLoginData(data.user);
+      setTokenData(data.access);
+      setRefreshData(data.refresh);
+      localStorage.setItem('user-data', JSON.stringify(data.user));
+      localStorage.setItem('access-token', JSON.stringify(data.access));
+      localStorage.setItem('refresh-token', JSON.stringify(data?.refresh));
+    }
+  };
+
+  let content = '';
+  const isLoginData = Object.keys(loginData).length !== 0;
+  content = !isLoginData ? (
+    <>
+      <div>
+        <form>
+          <label>
+            username
+            <input type="text" placeholder="username" value="abhi" />
+          </label>
+          <label>
+            password
+            <input type="text" placeholder="username" value="12345" />
+          </label>
+          <button type="button" onClick={handleLogin}>
+            Login normally
+          </button>
+        </form>
+      </div>
+      &nbsp;
+      <div>
+        <GoogleLogin
+          clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+          buttonText="Login with google"
+          onSuccess={handleLogin}
+          onFailure={handleFailure}
+          cookiePolicy="single_host_origin"
+        />
+      </div>
+    </>
+  ) : (
+    <>
+      <div>
+        <h3>You are logged as {loginData?.email}</h3>
+        <button type="button" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
+    </>
+  );
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-          Learn React
-        </a>
+        <h1>React google login apps</h1>
+        <div />
+        {content}
       </header>
     </div>
   );
-}
+};
 
 export default App;

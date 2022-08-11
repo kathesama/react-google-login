@@ -4,7 +4,7 @@ import { useState } from 'react';
 // import { getGoogleApiRoute } from './utils/routes';
 import './App.css';
 
-const App = () => {
+function App() {
   const [loginData, setLoginData] = useState(
     localStorage.getItem('user-data') ? JSON.parse(localStorage.getItem('user-data')) : {}
   );
@@ -111,14 +111,12 @@ const App = () => {
       </div>
     </>
   ) : (
-    <>
-      <div>
-        <h3>You are logged as {loginData?.email}</h3>
-        <button type="button" onClick={handleLogout}>
-          Logout
-        </button>
-      </div>
-    </>
+    <div>
+      <h3>You are logged as {loginData?.email}</h3>
+      <button type="button" onClick={handleLogout}>
+        Logout
+      </button>
+    </div>
   );
 
   return (
@@ -130,6 +128,6 @@ const App = () => {
       </header>
     </div>
   );
-};
+}
 
 export default App;

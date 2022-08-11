@@ -20,9 +20,9 @@ const App = () => {
   };
 
   const handleLogout = async () => {
-    const data = await fetch('http://localhost:8051/api/v1/auths/logout', {
+    const data = await fetch(`${process.env.REACT_APP_API_SERVER}/auths/logout`, {
       method: 'POST',
-      xsrfCookieName: 'csrftoken',
+      xsrfCookieName: 'session',
       xsrfHeaderName: 'X-CSRFToken',
       withCredentials: true,
       headers: {
@@ -48,9 +48,10 @@ const App = () => {
   };
 
   const handleLogin = async (googleData) => {
-    const data = await fetch('http://localhost:8051/api/v1/users/google-login/', {
+    console.log('googleData: ', googleData);
+    const data = await fetch(`${process.env.REACT_APP_API_SERVER}/users/google-login`, {
       method: 'POST',
-      xsrfCookieName: 'csrftoken',
+      xsrfCookieName: 'session',
       xsrfHeaderName: 'X-CSRFToken',
       withCredentials: true,
       headers: {
@@ -64,9 +65,12 @@ const App = () => {
       }),
     })
       .then((res) => res.json())
-      .catch((err) => err);
+      .catch((err) => {
+        console.log('Error on login: ');
+        console.log(err);
+      });
 
-    if (data?.statusCode === undefined) {
+    if (data !== undefined && data?.statusCode === undefined) {
       setLoginData(data.user);
       setTokenData(data.access);
       setRefreshData(data.refresh);
